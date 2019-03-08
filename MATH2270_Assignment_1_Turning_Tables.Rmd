@@ -1,0 +1,62 @@
+---
+title: "MATH2270 Semester 1, 2018"
+author: "Ritwick Dev and s3702041"
+subtitle: Assignment 1 Turning Tables
+output:
+  html_notebook: default
+---
+
+## Setup
+
+Installed and loaded the necessary packages to reproduce the report.
+
+```{r, echo = TRUE, warnings = FALSE}
+library(readxl)# Useful for importing excel sheets
+library(knitr) # Useful for creating nice tables
+library(ggplot2) # Usefule for Data Visualisation
+```
+
+
+## Data Description
+- Summit of the G7 states in Elmau (2015) *G7 in figures - Statistisches Bundesamt*. Retrieved from 
+https://www.destatis.de/EN/Publications/Specialized/InternationalData/G7InFigures0000155159004.pdf%3F__blob%3DpublicationFile
+
+## Read/Import Data
+
+```{r}
+setwd("E:\\Data Visualization")
+Economic_Indicator_20 <- read_excel("G20_Data.xlsx")
+Economic_Indicator_G20 <- as.data.frame(Economic_Indicator_20)
+head(Economic_Indicator_G20)
+```
+
+
+
+
+## Code and Visualization
+
+```{r}
+# Created an object for the plot and started the ggplot by specifiying the dataset and variables.
+G20_Plot <- ggplot(Economic_Indicator_G20, aes(y=`Gross domestic product (GDP) in Billion US$`, x =`Unemployment rate %`)) 
+# Added a line of best fit before plotting the points.
+G20_Plot <- G20_Plot + geom_smooth(alpha= 0.15, method="lm", color=" Dark grey")
+# Added a layer for the plot type (point/scatter), colour the points by G-20 Countries.
+G20_Plot <- G20_Plot + geom_point(aes(colour = `G-20 Countries`), size = 3, na.rm = TRUE) + theme_minimal(base_size = 10)
+# Added title, make main and legend titles bold for better clarity
+G20_Plot <- G20_Plot + ggtitle("GDP of G20 countries vs Unemployment Rate",subtitle = "by country, 2015") + theme(plot.title = element_text(lineheight=.8, face="bold"), legend.title = element_text(lineheight= .5, face = "bold"),legend.position = "right")
+# Divided the legend into two columns.
+G20_Plot <- G20_Plot + guides(col = guide_legend(ncol = 2 ))
+# Added the label x and y axis with source.
+G20_Plot <- G20_Plot + labs(y="GDP in Billions of Dollars" , x="Unemployment Rate in % " ,caption = "Source : www.destatis.de") 
+# Added annotations; Strong Economic Countries = China, United States & European Union. With South-Africa having the highest level of unemployment and lowest GDP. Also, showing the plot inference for the G-20 countries interms of unemployment with respect to GDP.
+G20_Plot <- G20_Plot + annotate("text", label = "China", x = 4.5, y = 9500, color = "Black", size=3)+ annotate("text", label = "United States", x = 7.5, y = 16800, color = "Black", size=3) +  annotate("text", label = "European Union", x = 13, y = 17700, color = "Black", size=3)+annotate("text", label = "South-Africa", x = 22, y = 100, color = "Black", size=3) + annotate("text",  x = 15, y = 21000, color = "Blue", size=3 , label = "The plot depicts that stronger economic 
+countries have lower levels of unemployment") 
+# Added the line to bifurcate the countries interms of umemployment rates.
+G20_Plot<- G20_Plot + annotate("pointrange", x = 9, y = 5000, ymin = 0, ymax = 10000,colour = "red", size = 0.5)
+# Finally Plotted the graph.
+G20_Plot
+
+```
+
+<br>
+<br>
